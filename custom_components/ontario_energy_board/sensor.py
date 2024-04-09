@@ -80,6 +80,10 @@ class OntarioEnergyBoardSensor(CoordinatorEntity, SensorEntity):
 
         ULO prices and periods are the same all year round.
         """
+
+        if self.coordinator.energy_sector == "natural_gas":
+            return STATE_NO_PEAK
+        
         current_time = as_local(now())
         current_hour = int(current_time.strftime("%H"))
 
@@ -133,18 +137,26 @@ class OntarioEnergyBoardSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self) -> float | str:
         rates_mapper = {
-            "on_peak": "time_of_use_on_peak_price",
-            "mid_peak": "time_of_use_mid_peak_price",
-            "off_peak": "time_of_use_off_peak_price",
-            "no_peak": "no_peak_rate",
+            STATE_ON_PEAK: "time_of_use_on_peak_price",
+            STATE_MID_PEAK: "time_of_use_mid_peak_price",
+            STATE_OFF_PEAK: "time_of_use_off_peak_price",
+            STATE_ULO_MID_PEAK: "ulo_mid_peak_price",
+            STATE_ULO_ON_PEAK : "ulo_on_peak_price",
+            STATE_ULO_OFF_PEAK: "ulo_off_peak_price",
+            STATE_ULO_OVERNIGHT: "ulo_overnight_price",
+            STATE_NO_PEAK: "no_peak_rate",
         }
 
-        """Returns the current peak's rate."""
-        return (
-            self.coordinator.company_data[rates_mapper[self.active_peak]]
-            if rates_mapper[self.active_peak] in self.coordinator.company_data
-            else STATE_NO_PEAK
-        )
+        if self.coordinator.energy_sector == "electricity":
+            """Returns the current peak's rate."""
+            return (
+                self.coordinator.company_data[rates_mapper[self.active_peak]]
+                if rates_mapper[self.active_peak] in self.coordinator.company_data
+                else 0
+            )
+        else:
+            return self.coordinator.company_data["gas_supply_charge"]
+
 
     @property
     def extra_state_attributes(self) -> dict:
