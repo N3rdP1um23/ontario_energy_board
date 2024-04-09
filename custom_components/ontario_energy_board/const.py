@@ -10,7 +10,7 @@ CONF_ULO_ENABLED = "ulo_enabled"
 ENERGY_SECTORS = ["electricity", "natural_gas"]
 
 ELECTRICITY_RATES_URL = "https://www.oeb.ca/_html/calculator/data/BillData.xml"
-NATUR_GAS_RATES_URL = "https://www.oeb.ca/_html/calculator/data/GasBillData.xml"
+NATURAL_GAS_RATES_URL = "https://www.oeb.ca/_html/calculator/data/GasBillData.xml"
 
 ELECTRICITY_RATE_UNIT_OF_MEASURE = "CA $/kWh"
 NATURAL_GAS_RATE_UNIT_OF_MEASURE = "CA ¢/m³"
@@ -53,6 +53,11 @@ XML_KEY_MAPPINGS = {
         "OFPR": "off_peak_rate",
         "MPR": "mid_peak_rate",
         "ONPR": "on_peak_rate",
+        "ULO_overnight": "ulo_overnight_price",
+        "ULO_weekendoffp": "ulo_off_peak_price",
+        "ULO_midp": "ulo_mid_peak_price",
+        "ULO_onp": "ulo_on_peak_price",
+
     },
     "natural_gas": {
         "Dist": "distributor_name",
