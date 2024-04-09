@@ -147,12 +147,16 @@ class OntarioEnergyBoardSensor(CoordinatorEntity, SensorEntity):
             STATE_NO_PEAK: "no_peak_rate",
         }
 
-        """Returns the current peak's rate."""
-        return (
-            self.coordinator.company_data[rates_mapper[self.active_peak]]
-            if rates_mapper[self.active_peak] in self.coordinator.company_data
-            else STATE_NO_PEAK
-        )
+        if self.coordinator.energy_sector == "electricity":
+            """Returns the current peak's rate."""
+            return (
+                self.coordinator.company_data[rates_mapper[self.active_peak]]
+                if rates_mapper[self.active_peak] in self.coordinator.company_data
+                else 0
+            )
+        else:
+            return self.coordinator.company_data["gas_supply_charge"]
+
 
     @property
     def extra_state_attributes(self) -> dict:
